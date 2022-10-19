@@ -88,7 +88,7 @@
 
 <!-- YOUTUBE:START -->
 - [Setting up Step function](https://www.youtube.com/watch?v=DFSko_sLyMM)
-- [Invoke Step function from lambda(https://www.youtube.com/watch?v=kpuqc_7DQZA)
+- [Invoke Step function from lambda](https://www.youtube.com/watch?v=kpuqc_7DQZA)
 - [Upload details from website](https://www.youtube.com/watch?v=PzNQXYWQQ7c)
 <!-- YOUTUBE:END -->
 
