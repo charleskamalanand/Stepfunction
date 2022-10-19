@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="stepfunctions_graph.png" width="350" height="300" title="Architecture"> 
+  <img src="stepfunctions_graph.png" width="300" height="300" title="Architecture"> 
 </p>
 
 ## Steps to replicate
