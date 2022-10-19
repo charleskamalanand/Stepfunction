@@ -1,0 +1,95 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "Add info in DB",
+  "States": {
+    "Add info in DB": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:putItem",
+      "Parameters": {
+        "TableName": "StepFunctionDemo",
+        "Item": {
+          "customerId": {
+            "S.$": "$.customerId"
+          },
+          "orderId": {
+            "S.$": "$.orderId"
+          }
+        }
+      },
+      "Next": "Successful?",
+      "ResultSelector": {
+        "statuscode.$": "$.SdkHttpMetadata.HttpStatusCode"
+      },
+      "ResultPath": "$.result"
+    },
+    "Successful?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.result.statuscode",
+          "NumericEquals": 200,
+          "Next": "Process in Lambda"
+        }
+      ],
+      "Default": "Fail"
+    },
+    "Process in Lambda": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "arn:aws:lambda:us-east-1:951560400874:function:StepFunctionDemo:$LATEST"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "Success",
+      "ResultPath": "$.result",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "Wait",
+          "ResultPath": "$.result"
+        }
+      ]
+    },
+    "Wait": {
+      "Type": "Wait",
+      "Seconds": 10,
+      "Next": "Fall back Delete from DB"
+    },
+    "Fall back Delete from DB": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::dynamodb:deleteItem",
+      "Parameters": {
+        "TableName": "StepFunctionDemo",
+        "Key": {
+          "customerId": {
+            "S.$": "$.customerId"
+          },
+          "orderId": {
+            "S.$": "$.orderId"
+          }
+        }
+      },
+      "Next": "Fail"
+    },
+    "Success": {
+      "Type": "Succeed"
+    },
+    "Fail": {
+      "Type": "Fail"
+    }
+  }
+}
