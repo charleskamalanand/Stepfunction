@@ -13,7 +13,28 @@
 </p>
 
 ## Steps to replicate
+
+Use main.tf file to replicate this using Terraform.
+  Use API_URL output from the terraform CLI and edit the "orderDetails.html" and modify line 41 to add something like below
   
+  "https://uzi7m6kxxx.execute-api.us-east-2.amazonaws.com/Dev/sendMessage"
+    
+  
+  Add all below lambda functions in a folder named "lambda" before deploying the code
+  
+  ** InvokeStepFunctions.py
+  
+  stateMachineArn='arn:aws:states:us-east-2:9xxxxxxxxxx4:stateMachine:step_function_demo' in InvokeStepFunctions.py file
+  
+  ** StepFunctionDemo.py
+  
+  
+  "terraform init" followed by "terraform apply -auto-approve"
+  
+  
+  OR follow the below steps to create the infra 
+ 
+ 
   1. Setup DynamoDB
   
      **1.1** Create Table "StepFunctionDemo" with below fields with least provisioned capacity
